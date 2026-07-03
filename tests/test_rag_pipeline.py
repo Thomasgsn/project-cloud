@@ -2,6 +2,7 @@ from src.rag_pipeline import build_fallback_answer, build_prompt, chunk_text
 
 
 def test_chunk_text_creates_overlapping_chunks():
+    # Vérifie que le découpage respecte bien la logique de recouvrement.
     text = "a" * 2000
     chunks = chunk_text(text, source_name="sample.txt", chunk_size=800, chunk_overlap=100)
 
@@ -12,6 +13,7 @@ def test_chunk_text_creates_overlapping_chunks():
 
 
 def test_build_prompt_mentions_sources_and_question():
+    # Le prompt doit garder la question et les métadonnées des passages sources.
     prompt = build_prompt(
         question="Que dit le texte sur l'éducation ?",
         chunks=[
@@ -30,6 +32,7 @@ def test_build_prompt_mentions_sources_and_question():
 
 
 def test_build_fallback_answer_returns_extracts():
+    # Même sans Ollama, l'application doit fournir un retour exploitable.
     answer = build_fallback_answer(
         "Que dit le texte sur le climat ?",
         [
