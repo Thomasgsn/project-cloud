@@ -3,10 +3,13 @@ PIP := .venv/bin/pip
 PYTEST := .venv/bin/pytest
 STREAMLIT := .venv/bin/streamlit
 DOCKER := docker
-DOCKER_IMAGE := rag-cloud-api
+COMPOSE := docker compose
 OLLAMA_API_URL ?= http://host.docker.internal:11434/api/generate
 
-.PHONY: help venv install run run-local ui-local docker-build docker-run api-local test check ollama-pull ollama-serve clean
+.PHONY: help venv install run run-local ui-local api-local \
+	compose-up compose-down compose-build compose-logs \
+	fastapi-up streamlit-up minio-up \
+	test check ollama-pull ollama-serve clean
 
 help: ## Affiche la liste des commandes
 	@awk 'BEGIN {FS = ": ## "}; /^[a-zA-Z0-9_-]+: ## / {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -16,11 +19,10 @@ venv: ## Cree l'environnement virtuel Python dans .venv
 
 install: ## Installe toutes les dependances Python dans .venv
 	$(PIP) install --upgrade pip
-	$(PIP) install -r requirements.txt
+	$(PIP) install -r fastapi_requirements.txt
+	$(PIP) install -r streamlit_requirements.txt
 
-run: ## Construit et lance l'API via Docker
-	$(MAKE) docker-build
-	$(MAKE) docker-run
+run: compose-up ## Alias principal pour lancer la stack Docker Compose
 
 run-local: ui-local ## Alias pour lancer l'interface Streamlit en local
 
@@ -30,16 +32,26 @@ ui-local: ## Lance l'interface Streamlit en local sur le port 8501
 api-local: ## Lance l'API FastAPI en local sur le port 8000
 	$(PYTHON) -m uvicorn src.api:app --host 0.0.0.0 --port 8000 --reload
 
-docker-build: ## Construit l'image Docker du projet
-	$(DOCKER) build -t $(DOCKER_IMAGE) .
+compose-build: ## Construit les images Docker Compose
+	$(COMPOSE) build
 
-docker-run: ## Lance le conteneur Docker de l'API sur le port 8000
-	$(DOCKER) run --rm \
-		-p 8000:8000 \
-		-e OLLAMA_API_URL=$(OLLAMA_API_URL) \
-		-v "$(PWD)/data:/app/data" \
-		--add-host=host.docker.internal:host-gateway \
-		$(DOCKER_IMAGE)
+compose-up: ## Construit et lance toute la stack Docker Compose
+	$(COMPOSE) up --build
+
+compose-down: ## Arrete la stack Docker Compose
+	$(COMPOSE) down
+
+compose-logs: ## Affiche les logs de la stack Docker Compose
+	$(COMPOSE) logs -f
+
+fastapi-up: ## Lance uniquement le service FastAPI via Docker Compose
+	$(COMPOSE) up --build fastapi
+
+streamlit-up: ## Lance uniquement le service Streamlit via Docker Compose
+	$(COMPOSE) up --build streamlit
+
+minio-up: ## Lance uniquement le service MinIO via Docker Compose
+	$(COMPOSE) up --build minio
 
 test: ## Lance les tests unitaires
 	$(PYTEST)
