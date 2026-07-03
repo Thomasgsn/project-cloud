@@ -1,17 +1,19 @@
 # Mini projet RAG Cloud
 
-Application RAG légère construite pour répondre à des questions à partir du corpus fourni dans `EXAMEN/corpus_de_travail.txt` (discours de Barack Obama, 2013).
+Application RAG légère construite pour répondre à des questions à partir du corpus fourni : `corpus_de_travail.txt` (discours de Barack Obama, 2013).
+
+<https://gamma.app/docs/Projet-Cloud-Chaine-RAG-cyuo9samzcomsjz>
 
 ## Objectif
 
 L'application permet de :
 
-- charger un fichier `.txt` ou utiliser le corpus fourni ;
-- indexer le document en passages courts ;
-- vectoriser les passages avec un modèle d'embeddings multilingue ;
-- rechercher les passages les plus proches d'une question ;
-- générer une réponse en français ;
-- afficher les sources utilisées.
+- charger un fichier `.txt` ou `.pdf`
+- indexer le document en passages courts
+- vectoriser les passages avec un embedding local léger
+- rechercher les passages les plus proches d'une question
+- générer une réponse en français
+- afficher les sources utilisées
 
 Chaîne RAG utilisée :
 
@@ -21,11 +23,15 @@ Chaîne RAG utilisée :
 
 - Interface : `Streamlit`
 - Base vectorielle : `ChromaDB`
-- Embeddings : `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
+- Embeddings : hashing local léger sans modèle externe
 - Génération : `Ollama` en local via HTTP
 - Stockage du document : local (`data/documents/`)
 
 MinIO n'a pas été mis en place pour garder une version simple, testable rapidement et compatible avec un environnement local ou Codespaces sans services supplémentaires. Le stockage local remplit ici le même rôle pour le TP.
+
+Le corpus du sujet n'est plus proposé automatiquement dans l'interface si `data/documents/` est vide. Il faut soit uploader un fichier, soit copier le corpus fourni dans `data/documents/`.
+
+Le support PDF est inclus pour les PDF textuels simples. Les PDF scannés ou mal structurés peuvent produire une extraction incomplète.
 
 ## Structure
 
@@ -49,35 +55,71 @@ Prérequis :
 Créer l'environnement puis installer les dépendances :
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+make venv
+make install
+```
+
+Si vous avez déjà installé les dépendances et voyez une erreur du type `A module that was compiled using NumPy 1.x cannot be run in NumPy 2.x`, il faut réinstaller avec la version figée de NumPy :
+
+```bash
+rm -rf .venv
+make venv
+make install
 ```
 
 ## Lancer Ollama
 
-Installer Ollama puis récupérer un modèle léger, par exemple :
+Si Ollama n'est pas installé
 
 ```bash
-ollama pull mistral:7b-instruct
-ollama serve
+curl -fsSL https://ollama.com/install.sh | sh
+````
+
+Récupérer le modèle :
+
+```bash
+make ollama-pull
 ```
 
-Le projet appelle par défaut le modèle `mistral:7b-instruct` sur `http://localhost:11434`.
+Lacner le modèle :
+
+```bash
+make ollama-serve
+```
+
+Le projet appelle par défaut le modèle `qwen2.5:0.5b` sur `http://localhost:11434`.
 
 Si Ollama n'est pas disponible, l'application reste utilisable en mode dégradé : elle affiche les passages retrouvés les plus pertinents au lieu d'une réponse générée complète.
+
+## Commandes utiles
+
+Le projet contient un `Makefile` pensé pour la correction et la présentation :
+
+```bash
+make help
+```
+
+Commandes principales :
+
+- `make venv` : crée l'environnement virtuel ;
+- `make install` : installe les dépendances ;
+- `make run` : lance l'interface Streamlit ;
+- `make test` : lance les tests ;
+- `make check` : compile le code Python puis lance les tests ;
+- `make ollama-pull` : télécharge le modèle Ollama configuré ;
+- `make ollama-serve` : démarre Ollama.
 
 ## Lancer l'application
 
 ```bash
-streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+make run
 ```
 
 Puis ouvrir l'interface dans le navigateur.
 
 ## Utilisation
 
-1. Charger un fichier `.txt` ou sélectionner `corpus_de_travail.txt`.
+1. Charger un fichier `.txt` ou `.pdf`, ou sélectionner `corpus_de_travail.txt`.
 2. Cliquer sur `Indexer le document`.
 3. Poser une question en langage naturel.
 4. Lire la réponse et vérifier les passages sources affichés.
@@ -102,7 +144,7 @@ Ces valeurs respectent la plage conseillée dans le sujet et gardent des passage
 Lancer les tests :
 
 ```bash
-pytest
+make test
 ```
 
 La GitHub Action exécute aussi `pytest` à chaque `push` et `pull_request`.
@@ -110,6 +152,7 @@ La GitHub Action exécute aussi `pytest` à chaque `push` et `pull_request`.
 ## Limites connues
 
 - Une seule collection Chroma est utilisée pour simplifier le projet.
+- L'embedding local est moins sémantique qu'un vrai modèle transformer.
 - La qualité finale dépend du modèle Ollama installé localement.
 - Le mode dégradé ne produit pas une vraie synthèse LLM.
-- Le projet ne prend en charge que les fichiers `.txt`.
+- L'extraction PDF dépend de la qualité du texte présent dans le fichier.
