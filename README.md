@@ -1,6 +1,51 @@
 # Mini projet RAG Cloud
 
-Application RAG légère construite pour répondre à des questions à partir du corpus fourni : `corpus_de_travail.txt` (discours de Barack Obama).
+## Run Local
+
+Lancer l'API localement:
+
+```bash
+make api-local
+```
+
+Lancer l'interface Streamlit localement:
+
+```bash
+make ui-local
+```
+
+Dans les deux cas, Ollama doit déjà tourner sur la machine hôte:
+
+```bash
+make ollama-serve
+```
+
+Puis ouvrir:
+
+- `http://localhost:8000/docs` pour l'API
+- `http://localhost:8501` pour l'interface Streamlit
+
+## Run Codespaces
+
+Lancer l'API dans Docker:
+
+```bash
+make run
+```
+
+Puis ouvrir l'API exposée sur le port `8000`.
+
+Si Ollama tourne sur l'hôte Codespaces, on peut surcharger l'URL:
+
+```bash
+make docker-run OLLAMA_API_URL=http://host.docker.internal:11434/api/generate
+```
+
+Si vous voulez l'interface Streamlit dans Codespaces, utilisez:
+
+```bash
+make ui-local
+```
 
 <https://gamma.app/docs/Projet-Cloud-Chaine-RAG-cyuo9samzcomsjz>
 
@@ -22,6 +67,7 @@ Chaîne RAG utilisée :
 ## Choix techniques
 
 - Interface : `Streamlit`
+- Backend : `FastAPI`
 - Base vectorielle : `ChromaDB`
 - Embeddings : hashing local léger sans modèle externe
 - Génération : `Ollama` en local via HTTP
@@ -95,10 +141,11 @@ Commandes principales :
 
 - `make venv` : crée l'environnement virtuel ;
 - `make install` : installe les dépendances ;
-- `make run` : construit et lance l'application via Docker ;
-- `make run-local` : lance l'interface Streamlit en local ;
-- `make docker-build` : construit l'image Docker ;
-- `make docker-run` : lance le conteneur Docker ;
+- `make run` : construit et lance l'API FastAPI via Docker ;
+- `make api-local` : lance l'API en local sur le port 8000 ;
+- `make ui-local` : lance l'interface Streamlit en local ;
+- `make docker-build` : construit l'image Docker de l'API ;
+- `make docker-run` : lance l'API dans un conteneur Docker ;
 - `make test` : lance les tests ;
 - `make check` : compile le code Python puis lance les tests ;
 - `make ollama-pull` : télécharge le modèle Ollama configuré ;
@@ -106,17 +153,21 @@ Commandes principales :
 
 ## Lancer l'application
 
+Pour l'API:
+
 ```bash
 make run
 ```
 
-Puis ouvrir l'interface dans le navigateur.
+Puis ouvrir la documentation interactive sur `http://localhost:8000/docs`.
 
-Si Docker n'est pas disponible, utiliser :
+Pour l'interface Streamlit:
 
 ```bash
-make run-local
+make ui-local
 ```
+
+Puis ouvrir l'interface dans le navigateur.
 
 Si vous lancez le projet dans Codespaces et que l'adresse d'Ollama diffère, vous pouvez surcharger l'URL au moment du lancement:
 
@@ -130,6 +181,13 @@ make docker-run OLLAMA_API_URL=http://host.docker.internal:11434/api/generate
 2. Cliquer sur `Indexer le document`.
 3. Poser une question en langage naturel.
 4. Lire la réponse et vérifier les passages sources affichés.
+
+### Endpoints FastAPI
+
+- `GET /health`
+- `POST /upload`
+- `POST /index`
+- `POST /ask`
 
 Exemples de questions :
 
