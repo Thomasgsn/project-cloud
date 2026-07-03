@@ -1,17 +1,17 @@
 # Mini projet RAG Cloud
 
-Application RAG légère construite pour répondre à des questions à partir du corpus fourni dans `EXAMEN/corpus_de_travail.txt` (discours de Barack Obama, 2013).
+Application RAG légère construite pour répondre à des questions à partir du corpus fourni : `corpus_de_travail.txt` (discours de Barack Obama, 2013).
 
 ## Objectif
 
 L'application permet de :
 
-- charger un fichier `.txt` ou `.pdf`, ou utiliser le corpus fourni ;
-- indexer le document en passages courts ;
-- vectoriser les passages avec un embedding local léger ;
-- rechercher les passages les plus proches d'une question ;
-- générer une réponse en français ;
-- afficher les sources utilisées.
+- charger un fichier `.txt` ou `.pdf`
+- indexer le document en passages courts
+- vectoriser les passages avec un embedding local léger
+- rechercher les passages les plus proches d'une question
+- générer une réponse en français
+- afficher les sources utilisées
 
 Chaîne RAG utilisée :
 

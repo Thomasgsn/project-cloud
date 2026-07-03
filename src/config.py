@@ -11,7 +11,7 @@ DOCUMENTS_DIR = DATA_DIR / "documents"
 # Base Chroma persistée localement sur disque.
 CHROMA_DIR = DATA_DIR / "chroma"
 # Corpus fourni par le sujet, disponible par défaut sans upload.
-DEFAULT_CORPUS_PATH = BASE_DIR / "EXAMEN" / "corpus_de_travail.txt"
+DEFAULT_CORPUS_PATH = BASE_DIR / "corpus_de_travail.txt"
 
 # Paramètres RAG recommandés dans l'énoncé.
 CHUNK_SIZE = 850
