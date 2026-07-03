@@ -2,6 +2,8 @@
 
 Application RAG légère construite pour répondre à des questions à partir du corpus fourni : `corpus_de_travail.txt` (discours de Barack Obama, 2013).
 
+<https://gamma.app/docs/Projet-Cloud-Chaine-RAG-cyuo9samzcomsjz>
+
 ## Objectif
 
 L'application permet de :
