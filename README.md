@@ -118,6 +118,12 @@ Si Docker n'est pas disponible, utiliser :
 make run-local
 ```
 
+Si vous lancez le projet dans Codespaces et que l'adresse d'Ollama diffère, vous pouvez surcharger l'URL au moment du lancement:
+
+```bash
+make docker-run OLLAMA_API_URL=http://host.docker.internal:11434/api/generate
+```
+
 ## Utilisation
 
 1. Charger un fichier `.txt` ou `.pdf`, ou sélectionner `corpus_de_travail.txt`.

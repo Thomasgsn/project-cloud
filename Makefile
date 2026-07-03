@@ -4,6 +4,7 @@ PYTEST := .venv/bin/pytest
 STREAMLIT := .venv/bin/streamlit
 DOCKER := docker
 DOCKER_IMAGE := rag-cloud
+OLLAMA_API_URL ?= http://host.docker.internal:11434/api/generate
 
 .PHONY: help venv install run run-local docker-build docker-run test check ollama-pull ollama-serve clean
 
@@ -27,18 +28,10 @@ run-local: ## Lance l'interface Streamlit en local sur le port 8501
 docker-build: ## Construit l'image Docker du projet
 	$(DOCKER) build -t $(DOCKER_IMAGE) .
 
-docker-run-local: ## Lance le conteneur Docker sur le port 8501
-	$(DOCKER) run --rm \
-		-p 8501:8501 \
-		-e OLLAMA_API_URL=http://host.docker.internal:11434/api/generate \
-		-v "$(PWD)/data:/app/data" \
-		--add-host=host.docker.internal:host-gateway \
-		$(DOCKER_IMAGE)
-
 docker-run: ## Lance le conteneur Docker sur le port 8501
 	$(DOCKER) run --rm \
 		-p 8501:8501 \
-		-e OLLAMA_API_URL=https://miniature-space-capybara-q744995rr73rwq-11434.app.github.dev \
+		-e OLLAMA_API_URL=$(OLLAMA_API_URL) \
 		-v "$(PWD)/data:/app/data" \
 		--add-host=host.docker.internal:host-gateway \
 		$(DOCKER_IMAGE)
