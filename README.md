@@ -34,18 +34,6 @@ Le corpus du sujet n'est plus proposé automatiquement dans l'interface si `data
 
 Le support PDF est inclus pour les PDF textuels simples. Les PDF scannés ou mal structurés peuvent produire une extraction incomplète.
 
-## Structure
-
-```text
-app.py
-src/
-  config.py
-  document_store.py
-  rag_pipeline.py
-tests/
-.github/workflows/ci.yml
-```
-
 ## Installation
 
 Prérequis :
