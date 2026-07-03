@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+    streamlit:
+        build: 
+            context: .
+            dockerfile: streamlit.Dockerfile
+        ports:
+            - "8501:8501"
+        networks:
+            - cloud-net
+    minio:
+        image: minio/minio:latest
+        ports:
+            - "9000:9000"
+            - "9001:9001"
+        networks:
+            - cloud-net
+        command: server /data --console-address ":9001" | mc alias set local http://127.0.0.1:9000 minioadmin minioadmin
+    fastapi:
+        build: 
+            context: .
+            dockerfile: fastapi.Dockerfile
+        ports: 
+            - "8000:8000"
+        networks:
+            - cloud-net
+
+networks:
+    cloud-net:
+        driver: bridge
