@@ -26,6 +26,7 @@ Chaîne RAG utilisée :
 - Embeddings : hashing local léger sans modèle externe
 - Génération : `Ollama` en local via HTTP
 - Stockage du document : local (`data/documents/`)
+- Conteneurisation : `Docker`
 
 MinIO n'a pas été mis en place pour garder une version simple, testable rapidement et compatible avec un environnement local ou Codespaces sans services supplémentaires. Le stockage local remplit ici le même rôle pour le TP.
 
@@ -51,6 +52,7 @@ Prérequis :
 
 - Python 3.11+
 - Ollama installé localement
+- Docker installé localement pour le lancement containerisé
 
 Créer l'environnement puis installer les dépendances :
 
@@ -91,6 +93,8 @@ Le projet appelle par défaut le modèle `qwen2.5:0.5b` sur `http://localhost:11
 
 Si Ollama n'est pas disponible, l'application reste utilisable en mode dégradé : elle affiche les passages retrouvés les plus pertinents au lieu d'une réponse générée complète.
 
+En mode Docker, l'application passe par `host.docker.internal` pour joindre Ollama lancé sur la machine hôte.
+
 ## Commandes utiles
 
 Le projet contient un `Makefile` pensé pour la correction et la présentation :
@@ -103,7 +107,10 @@ Commandes principales :
 
 - `make venv` : crée l'environnement virtuel ;
 - `make install` : installe les dépendances ;
-- `make run` : lance l'interface Streamlit ;
+- `make run` : construit et lance l'application via Docker ;
+- `make run-local` : lance l'interface Streamlit en local ;
+- `make docker-build` : construit l'image Docker ;
+- `make docker-run` : lance le conteneur Docker ;
 - `make test` : lance les tests ;
 - `make check` : compile le code Python puis lance les tests ;
 - `make ollama-pull` : télécharge le modèle Ollama configuré ;
@@ -116,6 +123,12 @@ make run
 ```
 
 Puis ouvrir l'interface dans le navigateur.
+
+Si Docker n'est pas disponible, utiliser :
+
+```bash
+make run-local
+```
 
 ## Utilisation
 
