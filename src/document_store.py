@@ -11,7 +11,6 @@ def ensure_directories() -> None:
 
 def save_uploaded_document(name: str, content: bytes) -> Path:
     # Le fichier est enregistré localement pour rester simple et testable
-    # sans dépendre d'un service externe type MinIO.
     ensure_directories()
     target = DOCUMENTS_DIR / name
     target.write_bytes(content)

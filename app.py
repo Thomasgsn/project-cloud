@@ -8,8 +8,8 @@ from src.rag_pipeline import AnswerResult, answer_question, index_document
 
 
 # Configuration générale de la page Streamlit.
-st.set_page_config(page_title="RAG Obama 2013", layout="wide")
-st.title("Mini application RAG sur le discours de Barack Obama (2013)")
+st.set_page_config(page_title="RAG Obama", layout="wide")
+st.title("Mini application RAG sur le discours de Barack Obama")
 st.caption("Chargement, indexation, question-réponse et affichage des sources.")
 
 

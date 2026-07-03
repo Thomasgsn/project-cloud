@@ -3,7 +3,7 @@
 ## 1. Contexte et problématique du sujet
 
 - Construire une mini application IA capable de répondre à des questions à partir d’un document donné.
-- Le corpus utilisé est le discours d’investiture de Barack Obama de 2013.
+- Le corpus utilisé est le discours d’investiture de Barack Obama.
 - Objectif technique: mettre en place une chaîne RAG simple, testable et démontrable.
 - Problème à résoudre: répondre uniquement à partir du document, avec des sources visibles.
 

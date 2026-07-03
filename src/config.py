@@ -19,7 +19,7 @@ CHUNK_SIZE = 850
 CHUNK_OVERLAP = 120
 TOP_K = 4
 # Nom unique de la collection vectorielle utilisée dans Chroma.
-COLLECTION_NAME = "obama-2013-fr"
+COLLECTION_NAME = "obama-fr"
 # Modèle appelé via Ollama pour générer la réponse finale.
 OLLAMA_MODEL = "qwen2.5:0.5b"
 # Endpoint HTTP d'Ollama, configurable pour fonctionner en local ou dans Docker.
